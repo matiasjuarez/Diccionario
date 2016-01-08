@@ -1,0 +1,92 @@
+.smallMargin{
+    margin: 2px;
+}
+
+.mediumMargin{
+    margin: 5px;
+}
+
+.largeMargin{
+    margin: 10px;
+}
+
+.mediumVerticalMargin{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.largeVerticalMargin{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.height200px{
+    height: 200px;
+}
+
+.height400px{
+    height: 400px;
+}
+
+.overflowHidden{
+    overflow: hidden;
+}
+
+.overflowAuto{
+    overflow: auto;
+}
+
+.overflowVertical{
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.overFlowHidden{
+    overflow: hidden;
+}
+
+body{
+    background-image: url("../resources/background1.jpg");
+}
+
+textArea{
+    resize: none;
+}
+
+.fotoPalabra{
+    width: 50%;
+}
+
+.displayBlock{
+    display: block;
+}
+
+.floatRight{
+    float: right;
+}
+
+.floatLeft{
+    float: left;
+}
+
+.redBoxAlert{
+    box-shadow: 0 0 15px red;
+}
+
+.orangeBoxAlert{
+    box-shadow: 0 0 15px orangered;
+}
+
+.messageBoxFixedUpperCenter{
+    position: fixed;
+    top: 0px;
+    left: calc(100% - 85%);
+    width: 70%;
+    text-align: center;
+    z-index: 3;
+    box-shadow: 5px 5px 10px gray;
+}
+
+.scrolleableDiv{
+    
+}
