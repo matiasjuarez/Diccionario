@@ -13,10 +13,15 @@
  */
 
 require_once './Connection.php';
+
 abstract class DAOPalabra {
     
     public static function getAllWords(){
         $connection = new Connection();
+        
+        $query = "SELECT * FROM palabra";
+        
+        $resultSet = $connection->getConnection()->query($query);
         
         
     }
