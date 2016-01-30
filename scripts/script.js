@@ -9,7 +9,7 @@ $(document).ready(function(){
     manejadorVentana.agregarEventoImagenCargadaSelectorArchivos();
     //manejadorVentana.prevenirScrollDelBodyCuandoMouseEntraADiv();
     
-    var gestorComunicacion = new GestorComunicacionServidor("http://localhost/Diccionario/prueba.php");
+    var gestorComunicacion = new GestorComunicacionServidor("http://localhost/Diccionario/scriptsPHP/conexionBaseDatos.php");
     gestorComunicacion.enviarPeticion(function(respuesta){
         console.log(respuesta.status);
     });
