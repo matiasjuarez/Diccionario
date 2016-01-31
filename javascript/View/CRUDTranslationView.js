@@ -5,10 +5,12 @@
  */
 
 
-function CRUDTranslation(){
+function CRUDTranslationView(){
     this.translations = []; //Almacena las traducciones que el usuario va a creando
+    this.CRUDTranslationController = new CRUDTranslationController(this);
     
     this.buttonNewTranslation = $("#btnNewTranslation");
+    this.translationForm = $("#translationsForm");
      
     this.idBaseDivMensajeInformativo =  "divManejadorVentanaMensajeInformativo";
     this.idBaseDivContenedorTraduccionesDefiniciones = "divContenedorTraduccionDefinicion-";
@@ -17,6 +19,7 @@ function CRUDTranslation(){
      * Estas variables almacenan clases propias que usaran para fines scripticos lol
      */
     this.translationContainerClass = "translationContainer";
+    this.translationContainerLeftColumnClass = "translationContainerLeftColumn";
     this.deleteTranslationButtonClass = "deleteTranslationButton";
     this.translationInputClass = "translationInput";
     this.grammaticualFunctionClass = "grammaticalFunction";
@@ -25,27 +28,7 @@ function CRUDTranslation(){
     this.newTranslationExampleButtonClass = "newTranslationExampleButton";
     this.translationPhotoClass = "translationPhoto";
     this.photoSelectorClass = "photoSelector";
-    
-    this.obtenerIdEjemploTraduccionDefinicion = function(valor1, valor2){
-        
-        var id = this.idBaseEjemploParte1 + valor1 + this.idBaseEjemploParte2 + valor2;
-        return id;
-    };
-    
-    this.prevenirScrollDelBodyCuandoMouseEntraADiv = function(){
-            var clase = ".scrolleableDiv",
-                elementosEncontrados = $(clase);
-
-            elementosEncontrados.bind("mouseenter", function(){
-
-               $('body').css({"overflow":"hidden", "position":"fixed"});
-           });
-           
-            elementosEncontrados.bind("mouseleave", function(e) {
-                $('body').css({"overflow":"auto", "position":"initial"});
-            });
-            
-    };
+    this.redShadowAlertClass = "redBoxAlert";
     
     
     this.agregarEventoImagenCargadaSelectorArchivos = function(){
@@ -172,14 +155,7 @@ function CRUDTranslation(){
         }
     };
     
-    this.getNewExampleStructure = function(){
-            var html = "";
-            
-            html += '<label">Ejemplo</label>';
-            html += '<textarea class="form-control ' + this.translationExampleClass + '" ></textarea>';
-            
-            return html;
-    };
+    
     
     this.obtenerEjemplosBasandoseEnElHTMLDelContenedorTraduccionDefinicion = function(contenedorTraduccionDefinicion){
         
@@ -233,97 +209,7 @@ function CRUDTranslation(){
             contenedorMensajeInformativo.remove();
         }
     };
-    
-    
-    this.remarcarTraduccionesDefinicionesVacias = function(indicesTraduccionesDefiniciones){
-        
-        if(!indicesTraduccionesDefiniciones instanceof Array){
-            return false;
-        }
-        
-        var i = 0,
-            lengthArray = indicesTraduccionesDefiniciones.length;
-        
-        for(i = 0; i < lengthArray; i++){
             
-            $("#" + this.idBaseDivContenedorTraduccionesDefiniciones + indicesTraduccionesDefiniciones[i]).addClass("redBoxAlert");
-        }
-    };
-    
-    /*
-     * Verifica si entre las traduccionesDefiniciones cargadas hasta el momento existe alguna que
-     * tenga su traduccion y definicion vacias. Si encuentra alguna, devuelve un array con los indices
-     * de dichas traducciones. Si no encuentra nada devuelve false;
-     * @returns {Boolean}
-     */
-    this.existeTraduccionDefinicionVacia = function(){
-        var i = 0,
-            lengthTraducciones = this.traduccionesDefiniciones.length,
-            traduccionDefinicionAnalizada,
-            arregloTraduccionesDefiniciones = this.traduccionesDefiniciones,
-            arregloTraduccionesDefinicionesVacias = [];
-        
-        for(i = 0; i < lengthTraducciones; i++){
-            
-            traduccionDefinicionAnalizada = arregloTraduccionesDefiniciones[i];
-            
-            if(traduccionDefinicionAnalizada.estaSinUsar()){
-                
-                arregloTraduccionesDefinicionesVacias.push(i);
-            }
-        }
-        
-        if(arregloTraduccionesDefinicionesVacias.length !== 0){
-            return arregloTraduccionesDefinicionesVacias;
-        }
-        
-        return false;
-    };
-    
-    
-    this.agregarEventoClickNuevaTraduccion = function (){
-    
-    var self = this;
-    
-    $("#btnNuevaTraduccion").click(function(){
-      
-        self.traduccionesDefiniciones = obtenerArrayConTraduccionesDefiniciones();
-        
-        var estructuraHTMLTraduccionesDefiniciones = "",
-            traduccionesVacias = self.existeTraduccionDefinicionVacia();
-
-
-        if(!traduccionesVacias){
-            
-            self.cerrarMensajeInformativo();
-            
-            // En esta variable se guarda la estructura vacia HTML que contendra las traduccionesDefiniciones.
-            // Se la inicializa con valores por defecto de ID 0 para todos los elementos y con un solo campo para ejemplos
-             estructuraHTMLTraduccionesDefiniciones = obtenerEstructuraNuevaTraduccion(0, 1);
-             
-             estructuraHTMLTraduccionesDefiniciones += obtenerEstructuraHTMLTraduccionesDefinicionesTomandoDatosDelArray(self.traduccionesDefiniciones, 1);
-        
-            // Ss agrega la estructura html vacia que contendra las traduccionesDefiniciones
-            self.contenedorTraduccionesDefiniciones.html(estructuraHTMLTraduccionesDefiniciones);
-
-            // Se carga la estructura cargada en el paso anterior con las traducciones que esten guardadas en el arreglo de traduccionesDefiniciones
-            colocarTraduccionesDefinicionesDesdeArray(true);
-
-            prepararBotonesEliminarTraduccionDefinicion(self.traduccionesDefiniciones.length + 1);
-            
-        }
-        else{
-            
-            self.remarcarTraduccionesDefinicionesVacias(traduccionesVacias);
-            
-            $("#" + self.idBaseTraduccion + traduccionesVacias[0]).focus();
-            
-            self.mostrarMensajeInformativo("¡Parece que te ha quedado una traduccion-definicion sin usar!", "danger");
-            //alert("Vaya! Parece que tenes una traduccion-definicion que esta sin usar");
-        }
-    });
-    
-        
         // Agrega el evento que elimina una traduccionDefinicion a todos los botones eliminar
         function prepararBotonesEliminarTraduccionDefinicion(cantidadTraduccionesDefiniciones){
             for(var i = 0; i < cantidadTraduccionesDefiniciones; i++){
@@ -431,80 +317,65 @@ function CRUDTranslation(){
             return traduccionesDefinicionesGuardades;
         }
         
-        
-                
-        function getNewTranslationStructure(){
-            var html  = '<div class="row">';
-                
-                // Left column definition. Translations
-                html += '<div class="col-xs-8">';
-                html += '<div class="panel panel-success ' + self.translationContainerClass + '>';
-                html += '<button type="button" class="floatRight btn btn-danger ' + self.deleteTranslationButtonClass + '">ELIMINAR</button>';
-                html += '<div class="panel-heading">';
-                html += '<div class="form-group">';
-                html += '<label>Traduccion</label>';
-                html += '<input type="text" class="form-control ' + self.translationInputClass + '"/>';
-                html += '<label>Funcion gramatical</label>';
-                html += '<select class="form-control ' + self.grammaticualFunctionClass + '">';
-                html += '<option value="sustantivo">Sustantivo</option>';
-                html += '<option value="adjetivo">Adjetivo</option>';
-                html += '</select>';
-                html += '<label>Definicion</label>';
-                html += '<textarea class="form-control ' + self.definitionInputClass + '"></textarea>';
-                html += self.getNewExampleStructure();
-                html += '<button type="button" class="floatRight btn btn-primary ' + self.newTranslationExampleButtonClass + '">NUEVO EJEMPLO</button>';
-                html += '</div>';
-                html += '</div>';
-                html += '</div>';
-                html += '</div>';
-                
-                // Right column definition. Photos
-                html += '<div class="col-xs-4">';
-                html += '<div class="panel panel-success">';
-                html += '<div class="panel-heading text-center">';
-                html += '<img src="" class="img-rounded ' + self.translationPhotoClass + '" alt="photo" />';
-                
-                // Image selector
-                html += '<input type="file" name="pic" class="form-control ' + self.photoSelectorClass + '" accept="image/*">';
-                
-                html += '</div>';
-                html += '</div>';
-                html += '</div>';
-                
-                html += '</div>';
+    };
 
-            return html;
+CRUDTranslationView.prototype.addEventListeners = function(){
+    var self = this;
+    
+    addClickEventToDeleteTranslationButtons();
+    
+    function addClickEventToDeleteTranslationButtons(){
+        debugger;
+        $(document).on("click", "."+self.deleteTranslationButtonClass, function(event){
+            debugger;
+            $(this).parents("."+self.translationContainerClass).remove();
+        });
+    }
+};
+
+
+CRUDTranslationView.prototype.highlightEmptyTranslations = function(unusedTranslations){
+    
+    var self = this;
+    
+    if(!unusedTranslations instanceof Array){
+            return false;
+    }
+        
+        var i = 0,
+            lengthArray = unusedTranslations.length,
+            translationToHighlight;
+        
+        for(i = 0; i < lengthArray; i++){
+            
+            translationToHighlight = $(unusedTranslations[i]);
+            
+            $(translationToHighlight).find("."+self.translationContainerLeftColumnClass).addClass(self.redShadowAlertClass);
         }
         
-        
-        /*
-        * Elimina la traduccion-definicion en la que se encuentra el boton eliminar
-        */
-        function agregarEventoClickBotonEliminar(idBoton){
- 
-            var boton = $("#"+idBoton);
+        //Falta mostrar mensaje informativo
+};
 
-            boton.click(function(){
-                
-               var idSeparado = idBoton.split("-"),
-               numeroID = idSeparado[idSeparado.length - 1];
-                            
-               self.cerrarMensajeInformativo();
-               
-               self.traduccionesDefiniciones = obtenerArrayConTraduccionesDefiniciones();
-               
-               
-               self.traduccionesDefiniciones.splice(numeroID, 1);
-               
-               self.contenedorTraduccionesDefiniciones.html(obtenerEstructuraHTMLTraduccionesDefinicionesTomandoDatosDelArray(self.traduccionesDefiniciones, 0));
-               
-               colocarTraduccionesDefinicionesDesdeArray(false);
-               
-               prepararBotonesEliminarTraduccionDefinicion(self.traduccionesDefiniciones.length);
-            });
-        };
-        
-        
+CRUDTranslationView.prototype.unhighlightAllTranslations = function(){
+    var self = this;
+    $("."+self.translationContainerLeftColumnClass).removeClass(self.redShadowAlertClass);
+};
 
-    };
-}
+CRUDTranslationView.prototype.showTranslations = function(translations){
+    var self = this,
+        translationForm = self.translationForm,
+        i = 0,
+        length = translations.length;
+    
+    $(translationForm).html("");
+    
+    for(i = 0; i < length; i++){
+        $(translationForm).append($(translations[i]));
+    }
+};
+
+CRUDTranslationView.prototype.getTranslationContainers = function(){
+    var self = this;
+    
+    return $("." + self.translationContainerClass);
+};

@@ -1,17 +1,19 @@
 
-var manejadorVentana;
+var crudTranslationViewer;
 
 $(document).ready(function(){
     
-    manejadorVentana = new ManejadorVentana();
-    manejadorVentana.agregarEventoClickNuevaTraduccion();
-    manejadorVentana.agregarEventoClickBotonNuevoEjemplo();
-    manejadorVentana.agregarEventoImagenCargadaSelectorArchivos();
+    crudTranslationViewer = new CRUDTranslationView();
+    
+    crudTranslationViewer.CRUDTranslationController.addClickEventNewTranslationButton(crudTranslationViewer.buttonNewTranslation);
+    crudTranslationViewer.addEventListeners();
+    /*manejadorVentana.agregarEventoClickBotonNuevoEjemplo();
+    manejadorVentana.agregarEventoImagenCargadaSelectorArchivos();*/
     //manejadorVentana.prevenirScrollDelBodyCuandoMouseEntraADiv();
     
-    var gestorComunicacion = new GestorComunicacionServidor("http://localhost/Diccionario/scriptsPHP/conexionBaseDatos.php");
+    /*var gestorComunicacion = new GestorComunicacionServidor("http://localhost/Diccionario/scriptsPHP/conexionBaseDatos.php");
     gestorComunicacion.enviarPeticion(function(respuesta){
         console.log(respuesta.status);
     });
-   
+   */
 });

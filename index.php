@@ -1,9 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,12 +6,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
-        <script src = "javascript/jquery-2.1.4.min.js"></script>
-        <script src = "javascript/bootstrap.min.js"></script>
-        <script src = "javascript/traduccionDefinicion.js"></script>
-        <script src ="javascript/manejadorVentana.js"></script>
-	<script src = "javascript/script.js"></script>
-        <script src = "javascript/gestorComunicacionServidor.js"></script>
+        <script src = "./javascript/libs/jquery-2.1.4.min.js"></script>
+        <script src = "./javascript/libs/bootstrap.min.js"></script>
+        <script src = "./javascript/View/CRUDTranslationView.js"></script>
+        <script src = "./javascript/Controller/CRUDTranslationController.js"></script>
+        <script src = "./javascript/Model/Translation.js"></script>
+	<script src = "./javascript/script.js"></script>
+        <script src = "./javascript/gestorComunicacionServidor.js"></script>
         
         
         <link href = "./styles/bootstrap.min.css" rel = "stylesheet" type="text/css" />
@@ -63,24 +58,25 @@
             <!--- Fin contenedor botones -->
             
             
-            <!--- Contenedor NUEVA PALABRA -->
-            <div class="row" id="contenedorNuevaPalabra">
+            <!--- NEW WORD container -->
+            <div class="row" id="createNewWordConatiner">
                 <div class="col-xs-12">
                     
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <!--- DIV palabra pronunciacion -->
+                            
+                            <!--- DIV word pronunciation -->
                             <div class="row">
                                 <div class="col-xs-12">
 
                                     <form class="form-inline" role="form">
 
                                         <div class="form-group">
-                                            <label for="palabra">Palabra</label>
-                                            <input type="text" class="form-control" id="palabra" />
+                                            <label for="word">Palabra</label>
+                                            <input type="text" class="form-control" id="word" />
 
-                                            <label for="pronunciacion">Pronunciacion</label>
-                                            <input type="text" class="form-control" id="pronunciacion" />
+                                            <label for="pronunciation">Pronunciacion</label>
+                                            <input type="text" class="form-control" id="pronunciation" />
                                         </div>
 
                                     </form>
@@ -88,21 +84,21 @@
                             </div>
                             <!--- FIN DIV palabra pronunciacion -->
                             
-                            <!--- DIV traducciones definiciones -->
+                            <!--- DIV translations -->
                             <div class="row largeVerticalMargin ">
                                 
                                 <div class="col-xs-12">
                                     
                                     <div class="panel panel-warning">
                                         <div class="panel-heading">
-                                            <span>TRADUCCIONES-DEFINICIONES</span>
-                                            <button type="button" class="floatRight btn btn-warning" id="btnNuevaTraduccion">NUEVA TRADUCCION</button>
+                                            <span>TRADUCCIONES</span>
+                                            <button type="button" class="floatRight btn btn-warning" id="btnNewTranslation">NUEVA TRADUCCION</button>
                                         </div>
                                     </div>
                                     
                                     <div class="panel panel-warning">
                                         <div class="panel-body overflowVertical height400px scrolleableDiv">
-                                            <form class="form-horizontal " id="formTraduccionesDefiniciones" role="form">
+                                            <form class="form-horizontal" id="translationsForm" role="form">
                                                 
                                                 
                                             </form>
@@ -112,7 +108,7 @@
                                 </div>
                            
                             </div>
-                            <!--- FIN DIV traducciones definiciones -->
+                            <!--- END OF DIV translations -->
                         </div>
                         
                     </div>
@@ -121,7 +117,7 @@
                     
                 </div>
             </div>
-            <!--- FIN CONTENEDOR NUEVA PALABRA -->
+            <!--- END OF NEW WORD container -->
         </div>
 </body>
 </html>
