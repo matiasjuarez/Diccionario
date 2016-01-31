@@ -5,31 +5,26 @@
  */
 
 
-function ManejadorVentana(){
-    this.traduccionesDefiniciones = []; //Almacena las traducciones que el usuario va a creando
+function CRUDTranslation(){
+    this.translations = []; //Almacena las traducciones que el usuario va a creando
     
-    this.botonNuevaTraduccion = $("#btnNuevaTraduccion");
-    this.contenedorTraduccionesDefiniciones = $("#formTraduccionesDefiniciones");
-    
-    // Estas variables almacenan la parte fija del nombre de ID que se utiliza para identificcar
-    // a las distintas partes de una traduccionDefinicion en el documento html
-    this.idBaseTraduccion = "traduccion-";
-    this.idBaseFuncionGramatical = "funcionGramatical-";
-    this.idBaseDefinicion = "definicion-";
-    this.idBaseEjemploParte1 = "traduccionDefinicion-";
-    this.idBaseEjemploParte2 = "-ejemplo-";
-    this.idBaseBotonEliminarTraduccionDefinicion = "botonEliminarTraduccion-";
+    this.buttonNewTranslation = $("#btnNewTranslation");
+     
     this.idBaseDivMensajeInformativo =  "divManejadorVentanaMensajeInformativo";
     this.idBaseDivContenedorTraduccionesDefiniciones = "divContenedorTraduccionDefinicion-";
     this.idBaseFotoTraduccion = "fotoTraduccionDefinicion";
     /*
      * Estas variables almacenan clases propias que usaran para fines scripticos lol
      */
-    this.claseBotonNuevoEjemploTraduccionDefinicion = "botonNuevoEjemploTraduccionDefinicion";
-    this.claseEjemploTraduccionDefinicion = "ejemploTraduccionDefinicion";
-    this.claseContenedorTraduccionesDefinicion = "divContenedorTraduccionesDefiniciones";
-    this.claseFotoTraduccionDefinicion = "fotoTraduccionDefinicion";
-    this.claseSelectorImagen = "selectorImagenTraduccionDefinicion";
+    this.translationContainerClass = "translationContainer";
+    this.deleteTranslationButtonClass = "deleteTranslationButton";
+    this.translationInputClass = "translationInput";
+    this.grammaticualFunctionClass = "grammaticalFunction";
+    this.definitionInputClass = "definitionInput";
+    this.translationExampleClass = "translationExample";
+    this.newTranslationExampleButtonClass = "newTranslationExampleButton";
+    this.translationPhotoClass = "translationPhoto";
+    this.photoSelectorClass = "photoSelector";
     
     this.obtenerIdEjemploTraduccionDefinicion = function(valor1, valor2){
         
@@ -177,11 +172,11 @@ function ManejadorVentana(){
         }
     };
     
-    this.agregarEstructuraParaNuevoEjemplo = function(valorIDContenedorTraduccion, numeroDelEjemplo){
+    this.getNewExampleStructure = function(){
             var html = "";
             
-            html += '<label for="' +  this.obtenerIdEjemploTraduccionDefinicion(valorIDContenedorTraduccion, numeroDelEjemplo) + '">Ejemplo</label>';
-            html += '<textarea class="form-control ' + this.claseEjemploTraduccionDefinicion + '" id="' +  this.obtenerIdEjemploTraduccionDefinicion(valorIDContenedorTraduccion, numeroDelEjemplo) + '" ></textarea>';
+            html += '<label">Ejemplo</label>';
+            html += '<textarea class="form-control ' + this.translationExampleClass + '" ></textarea>';
             
             return html;
     };
@@ -438,48 +433,39 @@ function ManejadorVentana(){
         
         
                 
-        function obtenerEstructuraNuevaTraduccion(valorID, cantidadEjemplos){
-            var html  = '<div class="row contenedorTraduccionDefinicion">';
+        function getNewTranslationStructure(){
+            var html  = '<div class="row">';
                 
-                // Definicion de columna izquierda. Traducciones definiciones
+                // Left column definition. Translations
                 html += '<div class="col-xs-8">';
-                html += '<div class="panel panel-success ' + self.claseContenedorTraduccionesDefinicion + '" id="' + self.idBaseDivContenedorTraduccionesDefiniciones + valorID + '">';
-                html += '<button type="button" class="floatRight btn btn-danger" id="' + self.idBaseBotonEliminarTraduccionDefinicion + valorID + '">ELIMINAR</button>';
+                html += '<div class="panel panel-success ' + self.translationContainerClass + '>';
+                html += '<button type="button" class="floatRight btn btn-danger ' + self.deleteTranslationButtonClass + '">ELIMINAR</button>';
                 html += '<div class="panel-heading">';
                 html += '<div class="form-group">';
-                html += '<label for="' + self.idBaseTraduccion + valorID + '" + >Traduccion</label>';
-                html += '<input type="text" class="form-control" id="' + self.idBaseTraduccion + valorID + '" />';
-                html += '<label for="' + self.idBaseFuncionGramatical + valorID + '">Funcion gramatical</label>';
-                html += '<select id="' + self.idBaseFuncionGramatical + valorID + '" class="form-control">';
+                html += '<label>Traduccion</label>';
+                html += '<input type="text" class="form-control ' + self.translationInputClass + '"/>';
+                html += '<label>Funcion gramatical</label>';
+                html += '<select class="form-control ' + self.grammaticualFunctionClass + '">';
                 html += '<option value="sustantivo">Sustantivo</option>';
                 html += '<option value="adjetivo">Adjetivo</option>';
                 html += '</select>';
-                html += '<label for="' + self.idBaseDefinicion + valorID + '">Definicion</label>';
-                html += '<textarea class="form-control" id="' + self.idBaseDefinicion + valorID + '"></textarea>';
-                
-                // Definicion de ejemplos
-                if(cantidadEjemplos === 0){
-                    cantidadEjemplos = 1;
-                }
-                
-                for(var i = 0; i < cantidadEjemplos; i++){
-                    html += self.agregarEstructuraParaNuevoEjemplo(valorID, i);
-                }
-                
-                html += '<button type="button" class="floatRight btn btn-primary ' + self.claseBotonNuevoEjemploTraduccionDefinicion + '">NUEVO EJEMPLO</button>';
+                html += '<label>Definicion</label>';
+                html += '<textarea class="form-control ' + self.definitionInputClass + '"></textarea>';
+                html += self.getNewExampleStructure();
+                html += '<button type="button" class="floatRight btn btn-primary ' + self.newTranslationExampleButtonClass + '">NUEVO EJEMPLO</button>';
                 html += '</div>';
                 html += '</div>';
                 html += '</div>';
                 html += '</div>';
                 
-                // Definicion columna derecha. Fotos
+                // Right column definition. Photos
                 html += '<div class="col-xs-4">';
                 html += '<div class="panel panel-success">';
                 html += '<div class="panel-heading text-center">';
-                html += '<img id="' + self.idBaseFotoTraduccion + valorID + '" src="" class="img-rounded fotoPalabra ' + self.claseFotoTraduccionDefinicion + '" alt="foto" />';
+                html += '<img src="" class="img-rounded ' + self.translationPhotoClass + '" alt="photo" />';
                 
-                // El cargador de imagen
-                html += '<input type="file" name="pic" class="form-control ' + self.claseSelectorImagen + '" accept="image/*">';
+                // Image selector
+                html += '<input type="file" name="pic" class="form-control ' + self.photoSelectorClass + '" accept="image/*">';
                 
                 html += '</div>';
                 html += '</div>';

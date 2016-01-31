@@ -1,3 +1,11 @@
+
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,12 +14,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
-        <script src = "javascript/jquery-2.1.4.min.js"></script>
-        <script src = "javascript/bootstrap.min.js"></script>
-        <script src = "javascript/traduccionDefinicion.js"></script>
-        <script src ="javascript/manejadorVentana.js"></script>
-	<script src = "javascript/script.js"></script>
-        <script src = "javascript/gestorComunicacionServidor.js"></script>
+        <script src = "./scripts/jquery-2.1.4.min.js"></script>
+        <script src = "./scripts/bootstrap.min.js"></script>
+        <script src = "./scripts/traduccionDefinicion.js"></script>
+        <script src ="./scripts/manejadorVentana.js"></script>
+	<script src = "./scripts/script.js"></script>
+        <script src = "./scripts/gestorComunicacionServidor.js"></script>
         
         
         <link href = "./styles/bootstrap.min.css" rel = "stylesheet" type="text/css" />
@@ -90,7 +98,7 @@
                                     <div class="panel panel-warning">
                                         <div class="panel-heading">
                                             <span>TRADUCCIONES-DEFINICIONES</span>
-                                            <button type="button" class="floatRight btn btn-warning" id="btnNuevaTraduccion">NUEVA TRADUCCION</button>
+                                            <button type="button" class="floatRight btn btn-warning" id="btnNewTranslation">NUEVA TRADUCCION</button>
                                         </div>
                                     </div>
                                     
