@@ -9,6 +9,7 @@
         <script src = "./javascript/libs/jquery-2.1.4.min.js"></script>
         <script src = "./javascript/libs/bootstrap.min.js"></script>
         <script src = "./javascript/View/CRUDTranslationView.js"></script>
+        <script src = "./javascript/View/InformativeMessage.js"></script>
         <script src = "./javascript/Controller/CRUDTranslationController.js"></script>
         <script src = "./javascript/Model/Translation.js"></script>
 	<script src = "./javascript/script.js"></script>

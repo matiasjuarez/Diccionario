@@ -8,6 +8,7 @@
 function CRUDTranslationView(){
     this.translations = []; //Almacena las traducciones que el usuario va a creando
     this.CRUDTranslationController = new CRUDTranslationController(this);
+    this.informativeMessageWindow = new InformativeMessage();
     
     this.buttonNewTranslation = $("#btnNewTranslation");
     this.translationForm = $("#translationsForm");
@@ -128,7 +129,7 @@ function CRUDTranslationView(){
          * @returns {Array|ManejadorVentana.existeEjemploSinUsarDentroDeLaTraduccionDefinicion.arregloEjemplosVacios|Boolean}
          */
         function existeEjemploSinUsarDentroDeLaTraduccionDefinicion(contenedorTraduccionDefinicion){
-            debugger;
+            
             var i = 0,
                 claseEjemploTraduccion = "textarea." + self.claseEjemploTraduccionDefinicion,
                 ejemplos = contenedorTraduccionDefinicion.find(claseEjemploTraduccion),
@@ -154,181 +155,29 @@ function CRUDTranslationView(){
             return arregloEjemplosVacios;
         }
     };
-    
-    
-    
-    this.obtenerEjemplosBasandoseEnElHTMLDelContenedorTraduccionDefinicion = function(contenedorTraduccionDefinicion){
-        
-        var elementosEjemplo;
-        
-        elementosEjemplo = contenedorTraduccionDefinicion.children("textarea." + this.claseEjemploTraduccionDefinicion);
-        
-        
-        return elementosEjemplo;
-        
-    };
-    
-    /*
-     * Muestra un mensaje en la parte superior de la ventana del usuario
-     * @param {type} mensaje. El mensaje que queremos mostrar
-     * @param {type} tipoMensaje. Indicar si es alert, warning, success o info
-     * @returns {undefined}
-     */
-    this.mostrarMensajeInformativo = function(mensaje, tipoMensaje){
-        
-            this.cerrarMensajeInformativo();
-            
-            var html = "",
-                tipoMensaje = tipoMensaje,
-                claseMensaje;
-            
-            if(tipoMensaje !== "danger" && tipoMensaje !== "warning" && tipoMensaje !== "success" && tipoMensaje !== "info"){
-                tipoMensaje = "info";
-            }
-            
-            claseMensaje = "alert-" + tipoMensaje;
-            
-            html = "<div class='alert " + claseMensaje + " messageBoxFixedUpperCenter fade in' id='" + this.idBaseDivMensajeInformativo + "'> \n\
-                        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> \n\
-                        <strong>" + mensaje + "</strong>\n\
-                        </div>";
-            
-            $("#divContainer").prepend(html);
-        
-    };
-    
-    /*
-     * Cierra el mensaje informativo en caso que este estuviera abierto
-     * @returns {undefined}
-     */
-    this.cerrarMensajeInformativo = function(){
-      
-        var contenedorMensajeInformativo = $("#" + this.idBaseDivMensajeInformativo);
-        
-        if(contenedorMensajeInformativo.length !== 0){
-            contenedorMensajeInformativo.remove();
-        }
-    };
-            
-        // Agrega el evento que elimina una traduccionDefinicion a todos los botones eliminar
-        function prepararBotonesEliminarTraduccionDefinicion(cantidadTraduccionesDefiniciones){
-            for(var i = 0; i < cantidadTraduccionesDefiniciones; i++){
-                agregarEventoClickBotonEliminar(self.idBaseBotonEliminarTraduccionDefinicion + i);
-            }
-        }
-            
-        function obtenerEstructuraHTMLTraduccionesDefinicionesTomandoDatosDelArray(array, indiceInicial){
-            
-            var cantidadTraduccionesDefiniciones = array.length;
-            var estructuraHTMLTraduccionesDefiniciones = "";
-            
-            for(var i = 0; i < cantidadTraduccionesDefiniciones; i++){
-                
-                estructuraHTMLTraduccionesDefiniciones += obtenerEstructuraNuevaTraduccion(indiceInicial + i, array[i].ejemplos.length);
-            }
-            
-            return estructuraHTMLTraduccionesDefiniciones;
-        }
-    
-        /*
-         * Toma las traducciones guardadas en el arreglo y las va colocando en los elementos html correspondientes.
-         * Se debe tener en cuenta que a la hora de tomar el id del elemento, se le debe sumar 1 al numero
-         * que lo identifica ya que vamos a dejar el primer div que representa una traduccionDefinicion vacio
-         * para que el usuario pueda ingresar su nueva traduccion sin necesidad de desplazar el scroll. Esto es en caso
-         * de que estemos agregando una traduccion nueva
-         */
-        function colocarTraduccionesDefinicionesDesdeArray(seAgregoTraduccionNueva){
-            
-            var traduccionDefinicion,
-                    i,
-                    j,
-                    lengthTraduccionesDefiniciones = self.traduccionesDefiniciones.length,
-                    lengthEjemplos,
-                    valorAgregarIndice;
-            
-            if(seAgregoTraduccionNueva){
-                valorAgregarIndice = 1;
-            }
-            else{
-                valorAgregarIndice = 0;
-            }
-            
-            for(i = 0; i <  lengthTraduccionesDefiniciones; i++){
-                
-                traduccionDefinicion = self.traduccionesDefiniciones[i];
-   
-                $("#" + self.idBaseTraduccion + (i + valorAgregarIndice)).val(traduccionDefinicion.traduccion);
-                $("#" + self.idBaseFuncionGramatical + (i + valorAgregarIndice)).val(traduccionDefinicion.funcionGramatical);
-                $("#" + self.idBaseDefinicion + (i + valorAgregarIndice)).val(traduccionDefinicion.definicion);
-                
-                var contenedorFoto = $("#" + self.idBaseFotoTraduccion + (i + valorAgregarIndice));
-                $(contenedorFoto).attr("src", traduccionDefinicion.foto);
-                
-                debugger;
-                for(j = 0, lengthEjemplos =  traduccionDefinicion.ejemplos.length; j < lengthEjemplos; j++ ){
-                    $("#" + self.obtenerIdEjemploTraduccionDefinicion(i + valorAgregarIndice, j)).val(traduccionDefinicion.ejemplos[j]);
-                }
-                
-            }
-        }
-    
-    
-        /*
-         * Obtiene un array con las traducciones que el usuario a ingresado en los formularios
-         * @returns {Array|ManejadorVentana.obtenerArrayConTraduccionesDefiniciones.traduccionesDefinicionesGuardades}
-         */
-        function obtenerArrayConTraduccionesDefiniciones(){
-            var traduccionesDefinicionesGuardades =  [];
-            
-            // Se obtiene la cantidad de traducciones que el usuario actualmente tiene para la palabra
-            var arrayDivsConTraduccionesDefinicionesLength = $("#formTraduccionesDefiniciones").children().length;
-            
-            // Para cada una de las traducciones se obtienenen los valores correspondientes y se crean objetos traduccionDefinicion
-            // que luego son almacenados en un array que se devuelve desde la funcion
-            for(var i = 0; i < arrayDivsConTraduccionesDefinicionesLength; i++){
-                debugger;
-                var traduccion = $("#" + self.idBaseTraduccion + i).val();
-                var funcionGramatical = $("#" + self.idBaseFuncionGramatical + i).val();
-                var definicion = $("#" + self.idBaseDefinicion + i).val();
-                var contenedorFoto = $("#" + self.idBaseFotoTraduccion + i);
-                var foto = $(contenedorFoto).attr("src");
-                var ejemplos = [];
-                
-                while(true){
-                    
-                    var ejemplo = $("#" + self.obtenerIdEjemploTraduccionDefinicion(i, ejemplos.length));
-                    
-                    if(ejemplo.length !== 0){
-                        ejemplos.push(ejemplo.val());
-                    }
-                    else{
-                        break;
-                    }
-                    
-                }
-                
-                var traduccionDefinicion = new TraduccionDefinicion({traduccion: traduccion, definicion: definicion, 
-                                                                    funcionGramatical: funcionGramatical, ejemplos: ejemplos,
-                                                                    foto: foto});
-                
-                traduccionesDefinicionesGuardades.push(traduccionDefinicion);
-            }
-            
-            return traduccionesDefinicionesGuardades;
-        }
-        
-    };
+}        
 
 CRUDTranslationView.prototype.addEventListeners = function(){
     var self = this;
     
     addClickEventToDeleteTranslationButtons();
+    addClickEventToAddNewTranslation();
     
     function addClickEventToDeleteTranslationButtons(){
-        debugger;
+        
         $(document).on("click", "."+self.deleteTranslationButtonClass, function(event){
-            debugger;
+            
             $(this).parents("."+self.translationContainerClass).remove();
+        });
+    }
+    
+    function addClickEventToAddNewTranslation(){
+        
+        var button = self.buttonNewTranslation;
+        
+        $(button).click(function(){
+            
+            self.CRUDTranslationController.newTranslationButtonFunctionality();
         });
     }
 };
@@ -348,17 +197,22 @@ CRUDTranslationView.prototype.highlightEmptyTranslations = function(unusedTransl
         
         for(i = 0; i < lengthArray; i++){
             
-            translationToHighlight = $(unusedTranslations[i]);
+            translationToHighlight = $(unusedTranslations[i].DOMElement);
             
             $(translationToHighlight).find("."+self.translationContainerLeftColumnClass).addClass(self.redShadowAlertClass);
         }
         
-        //Falta mostrar mensaje informativo
 };
 
 CRUDTranslationView.prototype.unhighlightAllTranslations = function(){
     var self = this;
-    $("."+self.translationContainerLeftColumnClass).removeClass(self.redShadowAlertClass);
+    $("."+self.translationContainerLeftColumnClass
+            ).removeClass(self.redShadowAlertClass);
+};
+
+CRUDTranslationView.prototype.focusOnEmptyTranslation = function(translation){
+    var self = this;
+    $(translation.DOMElement).find("." + self.translationInputClass).focus();
 };
 
 CRUDTranslationView.prototype.showTranslations = function(translations){
@@ -378,4 +232,13 @@ CRUDTranslationView.prototype.getTranslationContainers = function(){
     var self = this;
     
     return $("." + self.translationContainerClass);
+};
+
+
+CRUDTranslationView.prototype.showInformativeMessage = function(message, typeOfMessage){
+    debugger;
+    this.informativeMessageWindow.setMessage(message);
+    this.informativeMessageWindow.setKindOfMessage(typeOfMessage);
+    
+    this.informativeMessageWindow.showMessage($(document.body));
 };

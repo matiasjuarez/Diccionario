@@ -9,16 +9,7 @@ function CRUDTranslationController(CRUDTranslationView){
    
     this.translations = []; // A collection of divs containing all the translations that the user has entered
     this.CRUDTranslationView = CRUDTranslationView;
-    
-    this.translationContainerClass = "translationContainer";
-    this.deleteTranslationButtonClass = "deleteTranslationButton";
-    this.translationInputClass = "translationInput";
-    this.grammaticualFunctionClass = "grammaticalFunction";
-    this.definitionInputClass = "definitionInput";
-    this.translationExampleClass = "translationExample";
-    this.newTranslationExampleButtonClass = "newTranslationExampleButton";
-    this.translationPhotoClass = "translationPhoto";
-    this.photoSelectorClass = "photoSelector";    
+     
 }
 
 CRUDTranslationController.prototype.addClickEventToDeleteTranslationButtons = function(){
@@ -30,23 +21,19 @@ CRUDTranslationController.prototype.addClickEventToDeleteTranslationButtons = fu
     }
 };
 
-CRUDTranslationController.prototype.addClickEventNewTranslationButton = function(button){
+CRUDTranslationController.prototype.newTranslationButtonFunctionality = function(){
     var self = this,
             i,
             unusedTranslations,
             translations,
             translationsLength;
-            
-    
-    $(button).click(function(){
-      debugger;
-      
+                  
         self.translations = [];
         translations = self.CRUDTranslationView.getTranslationContainers();
         translationsLength = translations.length;
         
         for(i = 0; i < translationsLength; i++){
-            self.translations[i] = translations[i];
+            self.translations[i] = new Translation(translations[i]);
         }
         
         unusedTranslations = lookForUnusedTranslations();
@@ -69,11 +56,16 @@ CRUDTranslationController.prototype.addClickEventNewTranslationButton = function
             
             highlightEmptyTranslations(unusedTranslations);
             
-            $(unusedTranslations[0]).focus();
+            focusOnEmptyTranslation(unusedTranslations[0]);
             
-            //self.mostrarMensajeInformativo("¡Parece que te ha quedado una traduccion-definicion sin usar!", "danger");
+            self.CRUDTranslationView.showInformativeMessage("¡Parece que te ha quedado una traduccion sin usar!", "danger");
         }
-    });
+    
+    
+    function focusOnEmptyTranslation(emptyTranslation){
+        
+        self.CRUDTranslationView.focusOnEmptyTranslation(emptyTranslation);
+    }
     
     function highlightEmptyTranslations(unusedTranslations){
         self.CRUDTranslationView.highlightEmptyTranslations(unusedTranslations);
@@ -81,15 +73,11 @@ CRUDTranslationController.prototype.addClickEventNewTranslationButton = function
     
     function lookForUnusedTranslations(){
         
-        var translationInput,
-                emptyTranslations = [];
+        var emptyTranslations = [];
         
         for(var i = 0, length = self.translations.length; i < length; i++){
             
-            translationInput = $(self.translations[i]).find("." + self.translationInputClass);
-            
-            if($(translationInput).val() === ""){
-                console.log("Traduccion sin usar");
+            if(translations[i].isUnused()){
                 emptyTranslations.push(self.translations[i]);
             }
         }
@@ -105,58 +93,3 @@ CRUDTranslationController.prototype.showTranslations = function(){
      self.CRUDTranslationView.showTranslations(self.translations);
 };
 
-
-CRUDTranslationController.prototype.getNewExampleStructure = function(){
-            var html = "";
-            
-            html += '<label">Ejemplo</label>';
-            html += '<textarea class="form-control ' + this.translationExampleClass + '" ></textarea>';
-            
-            return html;
-};
-
-
-CRUDTranslationController.prototype.getNewTranslationStructure = function(){
-    var self = this;
-    
-            var html  = '<div class="row ' + self.translationContainerClass + '">';
-
-            // Left column definition. Translations
-            html += '<div class="col-xs-8">';
-            html += '<div class="panel panel-success ' + self.CRUDTranslationView.translationContainerLeftColumnClass + '">';
-            html += '<button type="button" class="floatRight btn btn-danger ' + self.deleteTranslationButtonClass + '">ELIMINAR</button>';
-            html += '<div class="panel-heading">';
-            html += '<div class="form-group">';
-            html += '<label>Traduccion</label>';
-            html += '<input type="text" class="form-control ' + self.translationInputClass + '"/>';
-            html += '<label>Funcion gramatical</label>';
-            html += '<select class="form-control ' + self.grammaticualFunctionClass + '">';
-            html += '<option value="sustantivo">Sustantivo</option>';
-            html += '<option value="adjetivo">Adjetivo</option>';
-            html += '</select>';
-            html += '<label>Definicion</label>';
-            html += '<textarea class="form-control ' + self.definitionInputClass + '"></textarea>';
-            html += self.getNewExampleStructure();
-            html += '<button type="button" class="floatRight btn btn-primary ' + self.newTranslationExampleButtonClass + '">NUEVO EJEMPLO</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</div>';
-            html += '</div>';
-
-            // Right column definition. Photos
-            html += '<div class="col-xs-4">';
-            html += '<div class="panel panel-success">';
-            html += '<div class="panel-heading text-center">';
-            html += '<img src="" class="img-rounded ' + self.translationPhotoClass + '" alt="photo" />';
-
-            // Image selector
-            html += '<input type="file" name="pic" class="form-control ' + self.photoSelectorClass + '" accept="image/*">';
-
-            html += '</div>';
-            html += '</div>';
-            html += '</div>';
-
-            html += '</div>';
-
-        return html;
-};

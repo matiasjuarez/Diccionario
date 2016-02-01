@@ -5,7 +5,6 @@ $(document).ready(function(){
     
     crudTranslationViewer = new CRUDTranslationView();
     
-    crudTranslationViewer.CRUDTranslationController.addClickEventNewTranslationButton(crudTranslationViewer.buttonNewTranslation);
     crudTranslationViewer.addEventListeners();
     /*manejadorVentana.agregarEventoClickBotonNuevoEjemplo();
     manejadorVentana.agregarEventoImagenCargadaSelectorArchivos();*/
