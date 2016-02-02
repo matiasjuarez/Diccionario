@@ -77,16 +77,3 @@ textArea{
     box-shadow: 0 0 15px orangered;
 }
 
-.messageBoxFixedUpperCenter{
-    position: fixed;
-    top: 0px;
-    left: calc(100% - 85%);
-    width: 70%;
-    text-align: center;
-    z-index: 3;
-    box-shadow: 5px 5px 10px gray;
-}
-
-.scrolleableDiv{
-    
-}
