@@ -31,30 +31,31 @@ CRUDTranslationController.prototype.newTranslationButtonFunctionality = function
         self.translations = [];
         translations = self.CRUDTranslationView.getTranslationContainers();
         translationsLength = translations.length;
-        
+                
         for(i = 0; i < translationsLength; i++){
             self.translations[i] = new Translation(translations[i]);
+            self.translations[i].unhighlightTranslation();
+            $(self.translations[i].DOMElement).remove();
         }
         
         unusedTranslations = lookForUnusedTranslations();
         
-        // This removes the red shadow around unused translations
-        self.CRUDTranslationView.unhighlightAllTranslations();
-        
         if(unusedTranslations.length === 0){            
-            //self.cerrarMensajeInformativo();
+                        
+            // Let's create and add a new translation to the existing translations
+            var newTranslation = new Translation();
             
-            // We add a structure for a new translation to the already existing translations
-            self.translations.unshift($.parseHTML(self.getNewTranslationStructure()));
+            self.translations.unshift(newTranslation);
             
             // Once we get the translations we need, we show them in the webpage
-            self.CRUDTranslationView.showTranslations(self.translations);
-            
-           
+           addTranslationsAgainToDOM();
+
         }
         else{
             
             highlightEmptyTranslations(unusedTranslations);
+            
+            addTranslationsAgainToDOM();
             
             focusOnEmptyTranslation(unusedTranslations[0]);
             
@@ -62,13 +63,32 @@ CRUDTranslationController.prototype.newTranslationButtonFunctionality = function
         }
     
     
+    function addTranslationsAgainToDOM(){
+        var i,
+                length = self.translations.length;
+        
+        for(i = 0; i < length; i++){
+            self.translations[i].addEventListeners();
+            
+        }
+        
+        self.CRUDTranslationView.showTranslations(self.translations);
+    }
+    
     function focusOnEmptyTranslation(emptyTranslation){
         
         self.CRUDTranslationView.focusOnEmptyTranslation(emptyTranslation);
     }
     
     function highlightEmptyTranslations(unusedTranslations){
-        self.CRUDTranslationView.highlightEmptyTranslations(unusedTranslations);
+        //self.CRUDTranslationView.highlightEmptyTranslations(unusedTranslations);
+        
+        var i = 0,
+                length = unusedTranslations.length;
+        
+        for(i = 0; i < length; i++){
+            unusedTranslations[i].highlightTranslation();
+        }
     }
     
     function lookForUnusedTranslations(){
@@ -77,7 +97,7 @@ CRUDTranslationController.prototype.newTranslationButtonFunctionality = function
         
         for(var i = 0, length = self.translations.length; i < length; i++){
             
-            if(translations[i].isUnused()){
+            if(self.translations[i].isUnused()){
                 emptyTranslations.push(self.translations[i]);
             }
         }

@@ -11,7 +11,6 @@ function Translation(DOMElement){
     this.grammaticalFunction = "";
     this.examples = [];
     this.photo = "";
-    this.DOMElement = DOMElement;
     
     this.translationContainerClass = "translationContainer";
     this.translationContainerLeftColumnClass = "translationContainerLeftColumn";
@@ -21,13 +20,21 @@ function Translation(DOMElement){
     this.definitionInputClass = "definitionInput";
     this.translationExampleClass = "translationExample";
     this.examplesContainerClass = "examplesContainer";
-    this.newTranslationExampleButtonClass = "newTranslationExampleButton";
+    this.addNewExampleButtonClass = "addNewExampleButton";
     this.translationPhotoClass = "translationPhoto";
     this.photoSelectorClass = "photoSelector";
+    this.redShadowAlertClass = "redBoxAlert";
+    
+    if(DOMElement){
+        this.DOMElement = DOMElement;
+    }
+    else{
+        this.createNewTranslationStructure();
+    }
 }
 
 Translation.prototype.extractDataFromDOMElement = function(){
-    debugger;
+    
     var self = this,
         i,
         examples = $(self.DOMElement).find("."+self.translationExampleClass),
@@ -63,8 +70,7 @@ Translation.prototype.isUnused = function(){
 Translation.prototype.createNewTranslationStructure = function(){
   
     var self = this,
-            html,
-            parsedStructure;
+            html;
     
             html  = '<div class="row ' + self.translationContainerClass + '">';
 
@@ -84,7 +90,7 @@ Translation.prototype.createNewTranslationStructure = function(){
             html += '<label>Definicion</label>';
             html += '<textarea class="form-control ' + self.definitionInputClass + '"></textarea>';
             html += '<div class="' + self.examplesContainerClass + '">'; 
-            html += '<button type="button" class="floatRight btn btn-primary ' + self.newTranslationExampleButtonClass + '">NUEVO EJEMPLO</button>';
+            html += '<button type="button" class="floatRight btn btn-primary ' + self.addNewExampleButtonClass + '">NUEVO EJEMPLO</button>';
             html += '</div>';
             html += '</div>';
             html += '</div>';
@@ -106,18 +112,120 @@ Translation.prototype.createNewTranslationStructure = function(){
 
             html += '</div>';
             
-            parsedStructure = $.parseHTML(html);
+            self.DOMElement = $.parseHTML(html);
             
-            $(parsedStructure).find("."+self.examplesContainerClass).append(self.getNewExampleStructure());
-            
-            return parsedStructure;
+            self.addNewExampleStructure();
 };
 
-Translation.prototype.getNewExampleStructure = function(){
-     var html = "";
+Translation.prototype.addNewExampleStructure = function(){
+     var html = "",
+             parsedElement,
+             self = this;
             
-        html += '<label">Ejemplo</label>';
+        html += '<label>Ejemplo</label>';
         html += '<textarea class="form-control ' + this.translationExampleClass + '" ></textarea>';
 
-        return $.parseHTML(html);
+        parsedElement = $.parseHTML(html);
+        
+        $(self.DOMElement).find("."+self.examplesContainerClass).append(parsedElement);
+};
+
+Translation.prototype.addEventListeners = function(){
+    var self = this,
+            deleteTranslationButton,
+            addNewExampleButton;
+    debugger;
+    if(self.DOMElement){
+        
+        deleteTranslationButton = $(self.DOMElement).find("."+self.deleteTranslationButtonClass);
+        $(deleteTranslationButton).off();
+        addClickEventToDeleteTranslationButton();
+        
+        
+        addNewExampleButton = $(self.DOMElement).find("."+self.addNewExampleButtonClass);
+        $(addNewExampleButton).off();
+        addClickEventToAddNewExampleButton();
+    }
+    
+    function addClickEventToDeleteTranslationButton(){
+        $(deleteTranslationButton).click(function(){
+           $(deleteTranslationButton).parents("."+self.translationContainerClass).remove(); 
+        });
+        
+    }
+    
+    function addClickEventToAddNewExampleButton(){
+        $(addNewExampleButton).click(function(){
+            
+           self.unhighlightExamples();
+           
+           // If no empty examples are found, a new example structure is added
+           if(self.getEmptyExamples().length === 0){
+               crudTranslationViewer.closeInformativeMesssage();
+               self.addNewExampleStructure();     
+           }
+           
+           else{
+               self.highlightEmptyExamples();
+
+               crudTranslationViewer.showInformativeMessage("Te han quedado uno o mas ejemplos sin usar", "info");
+           }      
+        });
+    }
+};
+
+
+Translation.prototype.getEmptyExamples = function(){
+     var self = this,
+            examples = $(self.DOMElement).find("."+self.translationExampleClass),
+            currentExample,
+            length = examples.length,
+            i,
+            emptyExamples = [];
+    
+    for(i = 0; i < length; i++){
+        currentExample = examples[i];
+        if($(currentExample).val() === ""){
+            emptyExamples.push(currentExample);
+        }
+    }
+    
+    return emptyExamples;
+};
+
+Translation.prototype.highlightTranslation = function(){
+    var self = this;
+    
+    $(self.DOMElement).find("."+self.translationContainerLeftColumnClass).addClass(self.redShadowAlertClass);
+};
+
+Translation.prototype.unhighlightTranslation = function(){
+    var self = this;
+    
+    $(self.DOMElement).find("."+self.translationContainerLeftColumnClass).removeClass(self.redShadowAlertClass);
+};
+
+
+Translation.prototype.highlightEmptyExamples = function(){
+    var self = this,
+            examples = $(self.DOMElement).find("."+self.translationExampleClass),
+            currentExample,
+            length = examples.length,
+            i;
+    
+    for(i = 0; i < length; i++){
+        currentExample = examples[i];
+        if($(currentExample).val() === ""){
+            $(currentExample).addClass(self.redShadowAlertClass);
+        }
+    }
+    
+};
+
+
+
+Translation.prototype.unhighlightExamples = function(){
+    var self = this;
+    
+    $(self.DOMElement).find("."+self.translationExampleClass).removeClass(self.redShadowAlertClass);
 };
