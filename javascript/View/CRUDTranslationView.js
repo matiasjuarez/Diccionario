@@ -6,72 +6,16 @@
 
 
 function CRUDTranslationView(){
-    this.translations = []; //Almacena las traducciones que el usuario va a creando
+    
     this.CRUDTranslationController = new CRUDTranslationController(this);
     this.informativeMessageWindow = new InformativeMessage();
     
     this.buttonNewTranslation = $("#btnNewTranslation");
     this.translationForm = $("#translationsForm");
 
-    /*
-     * Estas variables almacenan clases propias que usaran para fines scripticos lol
-     */
     this.translationContainerClass = "translationContainer";    
     
-    this.agregarEventoImagenCargadaSelectorArchivos = function(){
-        
-        var clase =  "." + this.claseSelectorImagen,
-            archivos,
-            foto,
-            reader;
-            
-            $(document.body).on("change", clase, function(e){
-              
-                
-               var cargador = e.target;
-               
-               archivos = cargador.files;
-               
-               foto = archivos[0];
-               
-               if(esFoto(foto)){
-                  console.log(foto);
-                  
-                  reader = new FileReader();
-                  
-                  reader.onload = (function(theFile){
-                      return function(e){
-                        
-                          var fotoContenedor = $(cargador).prev();
-                          
-                          $(fotoContenedor).attr("src", e.target.result);
-                      };
-                  })(foto);
-                  
-                  reader.readAsDataURL(foto);
-               }
-               else{
-                  console.log("No es foto");
-                  limpiarInputFile(e.target);
-               }
-               
-            });
-        
-        function limpiarInputFile(input){
-            input.value = '';
-            input.type = "text";
-            input.type = "file";
-        }
-        
-        function esFoto(archivo){
-            
-            if(archivo.type.match("image.*")){
-                return true;
-            }
-            return false;
-        }
-    };
-    }
+}
     
 CRUDTranslationView.prototype.addEventListeners = function(){
     var self = this;

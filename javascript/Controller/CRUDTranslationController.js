@@ -7,19 +7,11 @@
 
 function CRUDTranslationController(CRUDTranslationView){
    
-    this.translations = []; // A collection of divs containing all the translations that the user has entered
+    this.translations = []; // A collection of divs containing all the translations that the user has created
     this.CRUDTranslationView = CRUDTranslationView;
      
 }
 
-CRUDTranslationController.prototype.addClickEventToDeleteTranslationButtons = function(){
-    
-    var deleteButtons = getDeleteButtons();
-    
-    function getDeleteButtons(){
-        
-    }
-};
 
 CRUDTranslationController.prototype.newTranslationButtonFunctionality = function(){
     var self = this,
