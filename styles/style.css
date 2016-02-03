@@ -77,3 +77,16 @@ textArea{
     box-shadow: 0 0 15px orangered;
 }
 
+/*
+This style prevents the image from growing to big
+*/
+img{
+    max-width: 100%;
+}
+
+.closePhotoExampleAnchor{
+    position:absolute;
+    z-index:3;
+    top:0px;
+    font-size: x-large;
+}

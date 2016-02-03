@@ -23,7 +23,9 @@ function Translation(DOMElement){
     this.addNewExampleButtonClass = "addNewExampleButton";
     this.translationPhotoClass = "translationPhoto";
     this.photoSelectorClass = "photoSelector";
+    this.closePhotoExampleAnchorClass = "closePhotoExampleAnchor";
     this.redShadowAlertClass = "redBoxAlert";
+    this.emptyPhotoURL = "./resources/placeholder.png";
     
     if(DOMElement){
         this.DOMElement = DOMElement;
@@ -101,10 +103,11 @@ Translation.prototype.createNewTranslationStructure = function(){
             html += '<div class="col-xs-4">';
             html += '<div class="panel panel-success">';
             html += '<div class="panel-heading text-center">';
-            html += '<img src="" class="img-rounded ' + self.translationPhotoClass + '" alt="photo" />';
+            html += '<img src="' + self.emptyPhotoURL + '" class="img-rounded ' + self.translationPhotoClass + '" alt="photo"/>';
+            html += '<a href="#" class="' + self.closePhotoExampleAnchorClass + '">&times;</a>';
 
             // Image selector
-            html += '<input type="file" name="pic" class="form-control ' + self.photoSelectorClass + '" accept="image/*">';
+            html += '<input type="file" name="pic" class="form-control ' + self.photoSelectorClass + '" accept="image/*" style="display:none">';
 
             html += '</div>';
             html += '</div>';
@@ -133,7 +136,10 @@ Translation.prototype.addNewExampleStructure = function(){
 Translation.prototype.addEventListeners = function(){
     var self = this,
             deleteTranslationButton,
-            addNewExampleButton;
+            addNewExampleButton,
+            photoExample,
+            closePhotoAnchor,
+            fileChooserInput;
     debugger;
     if(self.DOMElement){
         
@@ -145,6 +151,20 @@ Translation.prototype.addEventListeners = function(){
         addNewExampleButton = $(self.DOMElement).find("."+self.addNewExampleButtonClass);
         $(addNewExampleButton).off();
         addClickEventToAddNewExampleButton();
+        
+        photoExample = $(self.DOMElement).find("."+self.translationPhotoClass);
+        $(photoExample).off();
+        addDragAndDropToPhotoExample();
+        addClickToPhotoExample();
+        
+        closePhotoAnchor = $(self.DOMElement).find("."+self.closePhotoExampleAnchorClass);
+        $(closePhotoAnchor).off();
+        addClickToClosePhotoAnchor();
+        
+        
+        fileChooserInput = $(self.DOMElement).find("."+self.photoSelectorClass);
+        $(fileChooserInput).off();
+        addChangeToFileChooserInput();
     }
     
     function addClickEventToDeleteTranslationButton(){
@@ -170,6 +190,58 @@ Translation.prototype.addEventListeners = function(){
 
                crudTranslationViewer.showInformativeMessage("Te han quedado uno o mas ejemplos sin usar", "info");
            }      
+        });
+    }
+    
+    function addDragAndDropToPhotoExample(){
+        $(photoExample).on("dragover", function(event){
+           event.preventDefault();
+           
+        });
+        
+        $(photoExample).on("drop", function(event){
+           event.preventDefault();
+           debugger;
+           var fileReader = new FileReader();
+           
+           fileReader.readAsDataURL(event.originalEvent.dataTransfer.files[0]);
+           
+           $(fileReader).on("load", function(){
+               $(photoExample).prop("src", fileReader.result);
+           });
+           
+        });
+    }
+    
+    function addClickToPhotoExample(){
+        $(photoExample).on("click", function(event){
+           $(self.DOMElement).find("."+self.photoSelectorClass).trigger("click"); 
+        });
+    }
+    
+    
+    function addClickToClosePhotoAnchor(){
+        $(closePhotoAnchor).on("click", function(event){
+           event.preventDefault();
+           $(self.DOMElement).find("."+self.translationPhotoClass).prop("src", self.emptyPhotoURL);
+        });
+    }
+    
+    /*
+     * When the file has been loaded onto the file chooser, a file reader reads that file.
+     * When the file reader has read it, it's loaded into the img element
+     */
+    function addChangeToFileChooserInput(){
+        $(fileChooserInput).on("change", function(event){
+           
+            var fileReader = new FileReader();
+            
+            fileReader.readAsDataURL(this.files[0]);
+            
+            $(fileReader).on("load", function(){
+               
+                $(self.DOMElement).find("."+self.translationPhotoClass).prop("src",fileReader.result);
+            });
         });
     }
 };
